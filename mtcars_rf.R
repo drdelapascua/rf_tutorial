@@ -1,32 +1,39 @@
-#############
-##
 ## Analysis of mtcars data using random forest
 ## Tuning and optimizing a RF model to predict mpg using the other variables
-## Mark A. Hayes, USFWS
-## 6/28/2023
-## 
-##
-#############
+## Authored by: Mark A. Hayes, USFWS 6/28/2023
+## Last Modified: Danielle De La Pascua 5/19/2024
 
 #rm(list=ls()) # Clear the global environment as needed
 
-
-## Libraries
+# Libraries ----
 
 library(randomForest)  
 
-# Load the mtcars dataset
+# > Load the mtcars dataset ----
 data(mtcars)
 
-# View the first 6 rows of the dataset
+# > View the first 6 rows of the dataset ----
 head(mtcars, 6)
 
-# Print the summary of the dataset
+# > Print the summary of the dataset ----
 summary(mtcars)
 dim(mtcars)
 
-## Use the random forest algorithm to predict mpg using the other variables
-## and then tune and optimize the RF model. 
+# description of cols
+# mpg = how many miles per one gallon a car can drive
+# cyl = how many cylinders are in the cars engine
+# disp = 	Displacement (cu.in.)
+# drat = Rear axle ratio
+# hp = Gross horsepower
+# wt = weight of car (1000 pounds)
+# qsec = 1/4 mile time
+# vs = Engine (0 = V-shaped, 1 = manual)
+# am = Transmission (0 = automatic, 1 = manual)
+# gear = Number of forward gear
+# carb = Number of carburetors
+
+# Use the random forest algorithm to predict mpg using the other variables ----
+# and then tune and optimize the RF model. 
 
 # Create a training and testing set
 set.seed(123)
@@ -34,8 +41,9 @@ train_index <- sample(nrow(mtcars), 0.75 * nrow(mtcars))
 train <- mtcars[train_index, ]
 test <- mtcars[-train_index, ]
 
+# Tune and optimize the RF model ----
 
-## Tuning using the key hyperparameters
+# Tuning using the key hyperparameters
 
 # hyperparameters to try
 # ntree = 500, 1000, 1500. This is the number of trees in the forest
@@ -64,7 +72,7 @@ rf2
 # Make predictions on the test set
 predictions <- predict(rf2, newdata = test)
 
-# Evaluate the model
+# Evaluate the model ----
 rmse <- mean((predictions - test$mpg)^2)
 print(rmse) # 4.39
 
@@ -146,26 +154,17 @@ varImpPlot(rf7, sort = TRUE, main = "Variable Importance Plot")
 
 dev.print(tiff, "varImpPlot_model7.tiff", height=4, width=6, units='in', res=300)
 
-# Plot the variable importance for the best model, Model 7, using Gini index
+# Plot the variable importance for the best model, Model 7, using Gini index ----
 
-# Calculate the mean decrease in gini index for each variable
+# > Calculate the mean decrease in gini index for each variable ----
 importance <- importance(rf7, type = 1)
 
-# Plot the variable importance plot
-varImpPlot(importance) # This is not working. Not sure why.
-
-# Print varImpPlotGini
+# > Print varImpPlotGini ----
 
 dev.print(tiff, "varImpPlotGini_model7.tiff", height=4, width=6, units='in', res=300)
-
-
 
 ## Also, make sure that each hyperparameter setting makes sense and we understand what it's doing. 
 
 ## Before saving set the file path for saving code:
 getwd()
 setwd("C:/temp/DFP_2023/code")
-
-## Then Quit Session
-
-# End
